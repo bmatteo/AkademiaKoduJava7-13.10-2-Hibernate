@@ -57,4 +57,9 @@ public class Car {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return "Car: " + this.brand + " " + this.model;
+    }
 }

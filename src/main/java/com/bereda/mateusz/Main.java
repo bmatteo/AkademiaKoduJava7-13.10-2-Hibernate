@@ -7,7 +7,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 public class Main {
     private static SessionFactory factory;
@@ -16,12 +19,16 @@ public class Main {
 
         Car car = new Car();
         car.setBrand("BMW");
-        car.setModel("3");
+        car.setModel("5");
         car.setCapacity(3.3);
         car.setPower(5);
         car.setDate(new Date());
 
         Main.persistCar(car);
+
+        ArrayList<Car> cars = Main.getCars();
+
+        System.out.println(cars);
     }
 
     public static void persistCar(Car car) {
@@ -36,5 +43,21 @@ public class Main {
         } finally {
             session.close();
         }
+    }
+
+    public static ArrayList<Car> getCars() {
+        Session session = Main.factory.openSession();
+        Transaction tx = null;
+
+        ArrayList<Car> result = new ArrayList<Car>();
+
+        tx = session.beginTransaction();
+        List cars = session.createQuery("FROM com.bereda.mateusz.model.Car").list();
+        for (Iterator iterator = cars.iterator(); iterator.hasNext();) {
+            Car c = (Car) iterator.next();
+            result.add(c);
+        }
+        tx.commit();
+        return result;
     }
 }
